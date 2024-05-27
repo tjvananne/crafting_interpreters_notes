@@ -1,0 +1,14 @@
+/*
+This is a block comment!
+    
+    /*
+    This code block is nested and won't end the parent/outer
+    code block!
+    */
+
+So these should still be commented out below here
+var x = 199;
+var y = 42;
+*/
+// @ // uncomment this line for "[line 13] Error: Unexpected character" (line number counting is working)
+var mybool = true;

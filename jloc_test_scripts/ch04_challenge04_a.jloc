@@ -1,0 +1,11 @@
+/*
+This is a block comment!
+Line numbers should still be counted though...
+*/
+
+var x = 199;
+var y = 42;
+var mybool;
+if (x >= y) {
+    mybool = true;
+}
