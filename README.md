@@ -25,3 +25,9 @@ Most of the time, we "consume" a character when reading the source code (i.e. th
 
 It makes much more sense now why an identifier such as a variable can't start with a number of symbol (other than `_`) in most languages. It would add a lot more complexity to identifying numeric literals. If I add `42x` to my source code, should this be flagged as a Lexical Error because the numeric literal contains an alpha character? Or should this be interpreted as an identifier by that name?
 
+### Challenge 4 - nested block comments
+
+I chose to take on the challenge of nested C-style block comments (`/* ... */`). I counted the occurrences of `/*` to keep track of how many layers of nesting I'm in at any given point. The tricky thing here is to make sure that I handle calling an extra `advance()` when my block comment counter gets to zero so that I consume the final `/`. Otherwise, the Scanner will add an errant `SLASH` token to the TokenArray of the program.
+
+I, personally, find the nested comment blocks to be confusing when eventually writing JLox. It makes more sense for any instance of `*/` to end the block comment regardless of how many instances of `/*` there were. But I will leave the nested logic in my implementation for now.
+

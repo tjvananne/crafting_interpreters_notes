@@ -18,6 +18,7 @@ class Scanner {
     private int start = 0;
     private int current = 0;
     private int line = 1;
+    private int comment_block_count = 0;
 
     Scanner(String source) {
         this.source = source;
@@ -71,6 +72,8 @@ class Scanner {
                 if (match('/')) {
                     // A comment goes until the end of the line.
                     while (peek() != '\n' && !isAtEnd()) advance();
+                } else if (match('*')) {
+                    comment_block();
                 } else {
                     addToken(SLASH);
                 }
@@ -97,6 +100,35 @@ class Scanner {
                     Lox.error(line, "Unexpected character.");
                 }
                 break;
+        }
+    }
+
+
+    private void comment_block() {
+        // Challenge 4; implement C-style /* ... */ comment blocks.
+        // Bonus: allow them to nest within each other.
+        // Thoughts: I need to track the count of occurrences of `/*`
+        // for nesting. I also need to track newlines, much like we do
+        // in the multi-line string logic.
+
+        comment_block_count++;
+        while (comment_block_count > 0) {
+            // first iteration will be the char immediately after 
+            // the '*' of the opening comment block
+            char c = advance();
+            if (isAtEnd()) {
+                Lox.error(line, "Unterminated comment block.");
+                return;
+            }
+            if (c == '\n') line++;
+            if (c == '/' && peek() == '*') comment_block_count++;
+            if (c == '*' && peek() == '/') {
+                comment_block_count--;
+
+                // consume the '/' in the final '*/' which closes
+                // out this instance of a block comment
+                if (comment_block_count == 0) advance();
+            }
         }
     }
 
