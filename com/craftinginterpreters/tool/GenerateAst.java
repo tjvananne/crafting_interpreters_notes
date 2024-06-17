@@ -21,15 +21,7 @@ public class GenerateAst {
             "Binary   : Expr left, Token operator, Expr right",
             "Grouping : Expr expression",
             "Literal  : Object value",
-            "Unary    : Token operator, Expr right",
-            // ToDo: I don't really know how to implement
-            // the RPN for Ch5 challenge 3. All I've done
-            // so far is add the class and parameter type
-            // here so it is created in our Expr.java file.
-            // I need to play around with how this syntax
-            // tree is working before being able to implement
-            // this, it seems.
-            "ReversePolish : Expr expression"
+            "Unary    : Token operator, Expr right"
         ));
     }
 

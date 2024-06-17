@@ -8,7 +8,6 @@ abstract class Expr {
         R visitGroupingExpr(Grouping expr);
         R visitLiteralExpr(Literal expr);
         R visitUnaryExpr(Unary expr);
-        R visitReversePolishExpr(ReversePolish expr);
     }
 
     static class Binary extends Expr {
@@ -67,19 +66,6 @@ abstract class Expr {
 
         final Token operator;
         final Expr right;
-    }
-
-    static class ReversePolish extends Expr {
-        ReversePolish(Expr expression) {
-            this.expression = expression;
-        }
-
-        @Override
-        <R> R accept(Visitor<R> visitor) {
-            return visitor.visitReversePolishExpr(this);
-        }
-
-        final Expr expression;
     }
 
     abstract <R> R accept(Visitor<R> visitor);
