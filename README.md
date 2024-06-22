@@ -31,3 +31,26 @@ I chose to take on the challenge of nested C-style block comments (`/* ... */`).
 
 I, personally, find the nested comment blocks to be confusing when eventually writing JLox. It makes more sense for any instance of `*/` to end the block comment regardless of how many instances of `/*` there were. But I will leave the nested logic in my implementation for now.
 
+
+## Representing Code (ch5)
+
+The grammar of the Scanner was simple enough to only require a "Regular" language (in reference to the [Chomsky hierarchy](https://en.wikipedia.org/wiki/Chomsky_hierarchy), yes, _that_ Chomsky). In order to implement the parser, we'll need to go one step up in complexity and functionality, which will be a **context-free grammar** (CFG).
+
+At this point it's useful to review what alphabet and string mean in each context so far along with which component implements that grammar.
+
+
+| **Terminology**            | **Lexical grammar** | **Syntactic grammar** |
+|----------------------------|---------------------|-----------------------|
+| The "alphabet" is...       | Characters          | Tokens                |
+| A "string" is...           | Lexeme or token     | Expression            |
+| It's implemented by the... | Scanner (lexer)     | Parser                |
+
+
+The Scanner looked at a linear sequence of tokens with an occasional one or two character "look-ahead". The Parser will allow for an arbitrarily deep nesting of expressions, which is why we need to move up to context-free grammar.
+
+When considering an arithmetic expression such as `1 + 2 * 3 - 4`, it can be useful for format the order of operations into a tree:
+
+![PEMDAS Order of Operations in tree-format](assets/Parser_PEMDAS_tree_expression.png)
+
+
+> A formal grammar’s job is to specify which strings are valid and which aren’t. If we were defining a grammar for English sentences, “eggs are tasty for breakfast” would be in the grammar, but “tasty breakfast for are eggs” would probably not.
