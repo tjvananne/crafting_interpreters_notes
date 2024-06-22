@@ -14,7 +14,7 @@ public class ReversePolish implements Expr.Visitor<String> {
 
     @Override
     public String visitGroupingExpr(Expr.Grouping expr) {
-        return build_string("", expr.expression);
+        return build_string(expr.expression);
     }
 
     @Override
@@ -33,12 +33,19 @@ public class ReversePolish implements Expr.Visitor<String> {
 
         for (Expr expr : exprs) {
             builder.append(expr.accept(this));
-            // probably a better way than this to avoid extra white space...
-            if (!(expr instanceof Expr.Grouping)) {
-                builder.append(" ");
-            }
+            builder.append(" ");
         }
         builder.append(op);
+        
+        return builder.toString();
+    }
+
+    private String build_string(Expr... exprs) {
+        StringBuilder builder = new StringBuilder();
+
+        for (Expr expr : exprs) {
+            builder.append(expr.accept(this));
+        }
 
         return builder.toString();
     }
