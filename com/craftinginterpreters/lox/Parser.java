@@ -20,10 +20,25 @@ class Parser {
         // We'll use the synchronize() method here later once we 
         // have statements in the language
         try {
-            return expression();
+            return comma_operator();
         } catch (ParseError error) {
             return null;
         }
+    }
+
+    private Expr comma_operator() {
+        // Challenge 01
+        // comma      → expression ( "," expression)* ;  (only return right-most expression value)
+        Expr expr = expression();
+        while (match(COMMA)) {
+            // I don't think we capture the token and concatenate into
+            // a Binary expression like we do for equality through factor
+            // because we want to evaluate the left expression and then
+            // discard the result.
+            expr = expression();
+        }
+
+        return expr;
     }
 
     private Expr expression() {
