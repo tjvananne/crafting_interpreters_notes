@@ -66,6 +66,16 @@ class Parser {
     private Expr equality() {
         // Grammar:
         // equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+
+        // Ch06 Challenge 03: error productions for binary operators
+        // that are missing a left hand operand.
+        if (match(BANG_EQUAL, EQUAL, GREATER, GREATER_EQUAL, LESS, LESS_EQUAL, PLUS)) {
+            Token bad_token = previous();
+            Expr discard_this = comparison(); // parse and discard the right hand operator
+            throw error(bad_token, "Binary operator '" + bad_token.lexeme +
+                "' requires a left-hand operand.");
+        }
+
         Expr expr = comparison();
         while (match(BANG_EQUAL, EQUAL_EQUAL)) {
             Token operator = previous();
