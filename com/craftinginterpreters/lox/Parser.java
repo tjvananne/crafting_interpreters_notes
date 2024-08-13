@@ -43,8 +43,24 @@ class Parser {
 
     private Expr expression() {
         // Grammar:
-        // expression       → equality ;
-        return equality();
+        // expression       → ternary ;
+        return ternary();
+    }
+
+    private Expr ternary() {
+        // I wrote this for ch06 challenge 02
+        // Grammar:
+        // ternary     -> equality ( "?" ternary ":" ternary )*
+        //             | equality ;
+        Expr expr = equality();
+        while (match(QUESTION)) {
+            Expr if_true = ternary();  // does this need to be equality? Or can it be a ternary?
+            consume(COLON, "Expect ':' after '?' in ternary operator.");
+            Expr if_false = ternary();
+            expr = new Expr.Ternary(expr, if_true, if_false);
+        }
+
+        return expr;
     }
 
     private Expr equality() {

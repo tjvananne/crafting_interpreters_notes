@@ -3,6 +3,9 @@ My personal notes and code while following along in the Crafting Interpreters bo
 
 Implementation notes (all from project root dir):
 
+* Before compiling the Java Lox project, compile and execute this script to generate the `Expr.java` file if changes have been made to the `GenerateAst.java` file:
+    * `javac com/craftinginterpreters/tool/GenerateAst.java`
+    * `java com.craftinginterpreters.tool.GenerateAst com/craftinginterpreters/lox`
 * Build out the `com/craftinginterpreters/lox/Lox.java` path
 * Compile with `javac com/craftinginterpreters/lox/Lox.java`
 * Execute with `java com.craftinginterpreters.lox.Lox [source-code-file]`
@@ -54,3 +57,73 @@ When considering an arithmetic expression such as `1 + 2 * 3 - 4`, it can be use
 
 
 > A formal grammar’s job is to specify which strings are valid and which aren’t. If we were defining a grammar for English sentences, “eggs are tasty for breakfast” would be in the grammar, but “tasty breakfast for are eggs” would probably not.
+
+
+## Ch 6 Parsing
+
+The final non-ambiguous grammar from this chapter looks like:
+
+```
+expression  -> equality;
+equality    -> comparision ( ( "!=" | "==" ) comparison )* ;
+comparison  -> term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term        -> factor ( ( "+" | "-" ) factor )* ;
+factor      -> unary ( ( "!" | "-" ) unary )* ;
+unary       -> ( "!" | "-" ) unary
+             | primary ;
+primary     -> NUMBER | STRING | "true" | "false" | "nil"
+             | "(" expression ")" ;
+```
+
+We had to be careful of a few gotchas when it came to left-recursion.
+
+Here's an example of converting a grammar rule into code.
+
+```
+equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+```
+
+Think about how we would handle `( ... )*` in code. We need it to be able to find an arbitrarily high count of that occurrence. So we need a `while` loop.
+
+```java
+  private Expr equality() {
+    Expr expr = comparison();
+
+    while (match(BANG_EQUAL, EQUAL_EQUAL)) {
+      Token operator = previous();
+      Expr right = comparison();
+      expr = new Expr.Binary(expr, operator, right);
+    }
+
+    return expr;
+  }
+```
+
+
+
+### Challenges
+
+The `comma` operator is simple enough. But the `ternary` operator is giving me a bit more trouble. Here is the revised grammar I've come up with so far that includes both the `comma` and `ternary` rules.
+
+
+```
+comma       -> expression (, expression )* ;
+expression  -> ternary ;
+ternary     -> equality ( "?" ternary ":" ternary )*
+            | equality ;
+equality    -> comparision ( ( "!=" | "==" ) comparison )* ;
+comparison  -> term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term        -> factor ( ( "+" | "-" ) factor )* ;
+factor      -> unary ( ( "!" | "-" ) unary )* ;
+unary       -> ( "!" | "-" ) unary
+             | primary ;
+primary     -> NUMBER | STRING | "true" | "false" | "nil"
+             | "(" expression ")" ;
+```
+
+My `ternary` rule is right-recursive, which should be fine. But I'm not sure which `Expr` sub class to use to represent it. I ended up creating my own `Ternary` subclass which has the following constructor signature: `Ternary(Expr predicate, Expr if_true, Expr if_false)`. I'm fairly happy with that, but I have no idea how a Ternary operator should appear in the Syntax tree or how that would impact the `AstPrinter` or `ReversePolish` visitors.
+
+I suspect this will make more sense once we implement if statements and I get to see how those are represented in a syntax tree.
+
+This [SO Post](https://stackoverflow.com/questions/65627247/right-associativity-of-ternary-operator) talks about how assicativity doesn't directly tell you exactly the order in which each operator will be evaluated. It simply gives you the rules for where to group things into parentheses. That's a little confusing to me, but I believe this comes down to what the compiler is physically doing along with some types of optimizations?
+

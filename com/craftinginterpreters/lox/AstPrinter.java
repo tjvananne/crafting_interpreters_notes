@@ -5,6 +5,14 @@ class AstPrinter implements Expr.Visitor<String> {
         return expr.accept(this);
     }
 
+    // TODO: ch06 challenge 02 - Revisit this once we know how if statements work
+    // and are represented in a syntax tree
+    @Override
+    public String visitTernaryExpr(Expr.Ternary expr) {
+        return parenthesize("ternary", expr.predicate,
+                            expr.if_true, expr.if_false);
+    }
+
     @Override
     public String visitBinaryExpr(Expr.Binary expr) {
         return parenthesize(expr.operator.lexeme,
