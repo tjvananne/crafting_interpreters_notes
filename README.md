@@ -103,6 +103,8 @@ Think about how we would handle `( ... )*` in code. We need it to be able to fin
 
 ### Challenges
 
+**Challenge 1 and 2**
+
 The `comma` operator is simple enough. But the `ternary` operator is giving me a bit more trouble. Here is the revised grammar I've come up with so far that includes both the `comma` and `ternary` rules.
 
 
@@ -127,3 +129,38 @@ I suspect this will make more sense once we implement if statements and I get to
 
 This [SO Post](https://stackoverflow.com/questions/65627247/right-associativity-of-ternary-operator) talks about how assicativity doesn't directly tell you exactly the order in which each operator will be evaluated. It simply gives you the rules for where to group things into parentheses. That's a little confusing to me, but I believe this comes down to what the compiler is physically doing along with some types of optimizations?
 
+---
+
+**Challenge 3: error productions for binary operators**
+
+> Add error productions to handle each binary operator appearing without a left-hand operand. In other words, detect a binary operator appearing at the beginning of an expression. Report that as an error, but also parse and discard a right-hand operand with the appropriate precedence.
+
+These are my current grammar rules for each binary operator:
+
+```
+equality    -> comparision ( ( "!=" | "==" ) comparison )* ;
+comparison  -> term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
+term        -> factor ( ( "+" | "-" ) factor )* ;
+factor      -> unary ( ( "!" | "-" ) unary )* ;
+```
+
+I'm honestly a little confused about how to represent the rules for parse errors vs successful parsing. The book says you could add `"+"` for the rules of a unary (so it would be like this: `unary → ( "!" | "-" | "+" ) unary`). But a `+` is not allowed, so that's what you'd consume in the event of an error so you could print something descriptive such as _"`+` is not a valid unary operator"_. But when I look at the rule of that production, it makes me feel like `+` is a valid option for a unary...
+
+I think I'm just going to add these to the code and keep them out of the actual grammar rules.
+
+Let's think about all of our binary operators:
+
+```
+!=
+==
+>
+>=
+<
+<=
++
+-
+```
+
+The only one of these that I don't believe I can do this for would be `-`, because it also works as a unary operator. In other words, it might be valid for `-` to not have a left hand operand, because it works as both a binary operator and a unary operator.
+
+Now I'm thinking about my lowest precedence (but earliest/highest grammar rule) that involves a binary operator, because that's the spot where I can do this test for all binary operators other than `-`. Currently, that's `equality()`. I'll implement these rules there.
