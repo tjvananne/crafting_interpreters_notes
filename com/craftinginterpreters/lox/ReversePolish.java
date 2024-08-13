@@ -7,6 +7,13 @@ public class ReversePolish implements Expr.Visitor<String> {
         return expr.accept(this);
     }
 
+    // TODO: ch06 challenge 02 - Revisit this once we know how if statements work
+    @Override
+    public String visitTernaryExpr(Expr.Ternary expr) {
+        return build_string("ternary", expr.predicate,
+                            expr.if_true, expr.if_false);
+    }
+
     @Override
     public String visitBinaryExpr(Expr.Binary expr) {
         return build_string(expr.operator.lexeme, expr.left, expr.right);

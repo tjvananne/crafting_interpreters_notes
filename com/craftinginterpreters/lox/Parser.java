@@ -20,16 +20,47 @@ class Parser {
         // We'll use the synchronize() method here later once we 
         // have statements in the language
         try {
-            return expression();
+            return comma_operator();
         } catch (ParseError error) {
             return null;
         }
     }
 
+    private Expr comma_operator() {
+        // Challenge 01
+        // comma      → expression ( "," expression)* ;  (only return right-most expression value)
+        Expr expr = expression();
+        while (match(COMMA)) {
+            // I don't think we capture the token and concatenate into
+            // a Binary expression like we do for equality through factor
+            // because we want to evaluate the left expression and then
+            // discard the result.
+            expr = expression();
+        }
+
+        return expr;
+    }
+
     private Expr expression() {
         // Grammar:
-        // expression       → equality ;
-        return equality();
+        // expression       → ternary ;
+        return ternary();
+    }
+
+    private Expr ternary() {
+        // I wrote this for ch06 challenge 02
+        // Grammar:
+        // ternary     -> equality ( "?" ternary ":" ternary )*
+        //             | equality ;
+        Expr expr = equality();
+        while (match(QUESTION)) {
+            Expr if_true = ternary();  // does this need to be equality? Or can it be a ternary?
+            consume(COLON, "Expect ':' after '?' in ternary operator.");
+            Expr if_false = ternary();
+            expr = new Expr.Ternary(expr, if_true, if_false);
+        }
+
+        return expr;
     }
 
     private Expr equality() {

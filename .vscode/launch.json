@@ -9,7 +9,7 @@
             "name": "run jlox script",
             "request": "launch",
             "mainClass": "com.craftinginterpreters.lox.Lox",
-            "args": "jlox_test_scripts/ch05_expr_parse_inspect.jlox"
+            "args": "jlox_test_scripts/ch06_ternary.jlox"
         },
         {
             "type": "java",
