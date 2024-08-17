@@ -40,13 +40,13 @@ class Interpreter implements Expr.Visitor<Object> {
         throw new RuntimeError(operator, "Operands must be numbers.");
     }
 
-    public boolean isTruthy(Object object) {
+    private boolean isTruthy(Object object) {
         if (object == null) return false;
         if (object instanceof Boolean) return (boolean)object;
         return true;
     }
 
-    public boolean isEqual(Object a, Object b) {
+    private boolean isEqual(Object a, Object b) {
         if (a == null && b == null) return true;
 
         // Calling .equals on null results in null pointer exception.
@@ -56,7 +56,7 @@ class Interpreter implements Expr.Visitor<Object> {
         return a.equals(b);
     }
 
-    public Object evaluate(Expr expr) {
+    private Object evaluate(Expr expr) {
         return expr.accept(this);
     }
 
