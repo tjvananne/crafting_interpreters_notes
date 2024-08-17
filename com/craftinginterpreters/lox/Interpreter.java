@@ -22,7 +22,7 @@ class Interpreter implements Expr.Visitor<Object> {
             case BANG:
                 return !isTruthy(right);
             case MINUS:
-                checkNumberOperand(expr.operator, expr.right);
+                checkNumberOperand(expr.operator, right);
                 return -(double)right;
         }
 
@@ -94,19 +94,19 @@ class Interpreter implements Expr.Visitor<Object> {
             case EQUAL_EQUAL:
                 return isEqual(left, right);
             case GREATER:
-                checkNumberOperands(expr.operator, expr.left, expr.right);
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left > (double)right;
             case GREATER_EQUAL:
-                checkNumberOperands(expr.operator, expr.left, expr.right);
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left >= (double)right;
             case LESS:
-                checkNumberOperands(expr.operator, expr.left, expr.right);
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left < (double)right;
             case LESS_EQUAL:
-                checkNumberOperands(expr.operator, expr.left, expr.right);
+            checkNumberOperands(expr.operator, left, right);
                 return (double)left <= (double)right;
             case MINUS:
-                checkNumberOperands(expr.operator, expr.left, expr.right);
+            checkNumberOperands(expr.operator, left, right);
                 return (double)left - (double)right;
             case PLUS:
                 if (left instanceof Double && right instanceof Double) {
@@ -117,10 +117,10 @@ class Interpreter implements Expr.Visitor<Object> {
                 }
                 throw new RuntimeError(expr.operator, "Operands must be two numbers or two strings.");
             case SLASH:
-                checkNumberOperands(expr.operator, expr.left, expr.right);
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left / (double)right;
             case STAR:
-                checkNumberOperands(expr.operator, expr.left, expr.right);
+                checkNumberOperands(expr.operator, left, right);
                 return (double)left * (double)right;
         }
 
