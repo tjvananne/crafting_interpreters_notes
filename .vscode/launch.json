@@ -6,6 +6,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "run jlox code from args",
+            "request": "launch",
+            "mainClass": "com.craftinginterpreters.lox.Lox",
+            "args": ["-c", "-3"]
+        },
+        {
+            "type": "java",
             "name": "run jlox script",
             "request": "launch",
             "mainClass": "com.craftinginterpreters.lox.Lox",
