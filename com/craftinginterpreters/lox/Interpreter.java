@@ -135,7 +135,7 @@ class Interpreter implements Expr.Visitor<Object> {
         // of the interface, so I have to implement something in order
         // to compile the project at all.
 
-        Boolean predicate = (boolean)evaluate(expr.predicate);
+        Boolean predicate = isTruthy(evaluate(expr.predicate));
 
         // Do we have to evaluate both sides? I guess we can just
         // evaluate the side that we need instead? I don't think
