@@ -185,3 +185,7 @@ Above is the error when testing out `3 > '3'`.
 
 If exactly one operand of the binary `+` operator is a String, then the other will implicitly be cast to a String and both operands will be concatenated. Otherwise, it works the same as it did before for two Doubles or two Strings. I hate this, but it's the challenge, so I'm doing it.
 
+### Challenge 3
+
+Implemented a divide by zero error.
+
