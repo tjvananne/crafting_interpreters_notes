@@ -164,3 +164,28 @@ Let's think about all of our binary operators:
 The only one of these that I don't believe I can do this for would be `-`, because it also works as a unary operator. In other words, it might be valid for `-` to not have a left hand operand, because it works as both a binary operator and a unary operator.
 
 Now I'm thinking about my lowest precedence (but earliest/highest grammar rule) that involves a binary operator, because that's the spot where I can do this test for all binary operators other than `-`. Currently, that's `equality()`. I'll implement these rules there.
+
+
+## Ch 7 Evaluating Expressions
+
+### Challenge 1
+
+I would allow the comparison operators (`>`, for example) to work on types other than our `number` type in Lox. It's obviously useful to sort strings into alphabetical order. I think I'd just let the strings sort in whatever their underlying encoding is.
+
+I would not allow comparisons between different types. Whatever small amount of gain you get from that would not be worth the more likely event of unintended bugs.
+
+Python allows equality checks (`==`) across types, but not comparisons such as `>`. That is exactly how I would do it as well.
+
+> `TypeError: '>' not supported between instances of 'int' and 'str'`
+
+Above is the error when testing out `3 > '3'`.
+
+### Challenge 2
+
+
+If exactly one operand of the binary `+` operator is a String, then the other will implicitly be cast to a String and both operands will be concatenated. Otherwise, it works the same as it did before for two Doubles or two Strings. I hate this, but it's the challenge, so I'm doing it.
+
+### Challenge 3
+
+Implemented a divide by zero error.
+
